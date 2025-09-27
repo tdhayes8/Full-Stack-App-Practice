@@ -25,11 +25,11 @@ ChartJS.register(
 function App() {
   const [score, setScore] = useState(5);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  // const [data, setData] = useState([]);
-  const [data, setData] = useState([
-    { date: "2025-09-27", score: 5 },
-    { date: "2025-09-26", score: 7 }
-  ]);
+  const [data, setData] = useState([]);
+  // const [data, setData] = useState([
+  //   { date: "2025-09-27", score: 5 },
+  //   { date: "2025-09-26", score: 7 }
+  // ]);
   const [loading, setLoading] = useState(true); // loading state
   const [error, setError] = useState(null); // error state
 
