@@ -5,12 +5,16 @@ Practice for an upcoming interview project.
 The first version will be a simple React UI w, a simple Postgres DB, and an Express 
 Creative visualizations and other features will follow
 
-#Backend Setup
+
+# Backend Setup
+```
 cd backend
 npm install
 npm start
-
-#Frontend Setup
+```
+# Frontend Setup
+```
 cd frontend
 npm install
 npm run dev
+```
