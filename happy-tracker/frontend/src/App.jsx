@@ -26,39 +26,27 @@ function App() {
   const [score, setScore] = useState(5);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [data, setData] = useState([]);
-  // const [data, setData] = useState([
-  //   { date: "2025-09-27", score: 5 },
-  //   { date: "2025-09-26", score: 7 }
-  // ]);
-  const [loading, setLoading] = useState(true); // loading state
-  const [error, setError] = useState(null); // error state
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  //Fetch data from backend
+  // Fetch data from backend
   const fetchData = async () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await fetch("http://localhost:5000/api/happiness");
-      if (!res.ok) throw new Error("Network response not ok");
+
+      // Relative URL works with Vite proxy
+      const res = await fetch("/api/happiness");
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const json = await res.json();
       setData(json);
     } catch (err) {
       console.error("Failed to fetch data:", err);
-      setError("Failed to load data. Check backend or CORS.");
+      setError("Failed to load data. Check backend or proxy.");
     } finally {
       setLoading(false);
     }
   };
-  // const fetchData = async () => {
-  //   try {
-  //     const res = await fetch("http://localhost:5000/api/happiness");
-  //     const json = await res.json();
-  //     console.log("Fetched data:", json); // <-- check output
-  //     setData(json);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
 
   useEffect(() => {
     fetchData();
@@ -67,15 +55,15 @@ function App() {
   // Submit new happiness score
   const submit = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/happiness", {
+      const res = await fetch("/api/happiness", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ score, date }),
       });
-      if (!res.ok) throw new Error("Failed to save data");
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       fetchData();
     } catch (err) {
-      console.error(err);
+      console.error("Failed to save data:", err);
       setError("Failed to save data");
     }
   };
@@ -93,7 +81,7 @@ function App() {
     ],
   };
 
-  // Determine best day safely
+  // Determine best day
   const bestDay = data.length > 0
     ? data.reduce((a, b) => (a.score > b.score ? a : b))
     : null;
@@ -129,7 +117,7 @@ function App() {
       {loading && <p>Loading data...</p>}
 
       {data.length > 0 ? (
-        <Line data={chartData} style={{ height: '300px' }}/>
+        <Line data={chartData} style={{ height: '300px' }} />
       ) : (
         !loading && <p>No data to display yet.</p>
       )}
