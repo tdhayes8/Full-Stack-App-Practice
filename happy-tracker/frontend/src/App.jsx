@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend
 } from "chart.js";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 // Register Chart.js components
 ChartJS.register(
@@ -36,7 +37,7 @@ function App() {
       setError(null);
 
       // Relative URL works with Vite proxy
-      const res = await fetch("/api/happiness");
+      const res = await fetch("http://localhost:5001/api/happiness");
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const json = await res.json();
       setData(json);
@@ -55,7 +56,7 @@ function App() {
   // Submit new happiness score
   const submit = async () => {
     try {
-      const res = await fetch("/api/happiness", {
+      const res = await fetch("http://localhost:5001/api/happiness", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ score, date }),

@@ -59,5 +59,5 @@ app.get('/api/happiness', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-app.listen(5001, () => console.log('Server running on port 5000'));
+app.listen(5001, () => console.log('Server running on port 5001'));
         
