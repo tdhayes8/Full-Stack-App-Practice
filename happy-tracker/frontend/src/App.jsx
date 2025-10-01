@@ -27,6 +27,7 @@ function App() {
   const [score, setScore] = useState(5);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [data, setData] = useState([]);
+  const [diary, setDiary] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -59,7 +60,7 @@ function App() {
       const res = await fetch("http://localhost:5001/api/happiness", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ score, date }),
+        body: JSON.stringify({ score, date , diary}),
       });
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       fetchData();
@@ -78,6 +79,7 @@ function App() {
       {
         label: "Happiness Score",
         data: data.map(d => d.score),
+        diary: data.map(d => d.diary),
         fill: false,
         borderColor: "blue",
       },
@@ -89,6 +91,18 @@ function App() {
     ? data.reduce((a, b) => (a.score > b.score ? a : b))
     : null;
 
+    const chartOptions = {
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const diaryText = context.dataset.diary[context.dataIndex];
+              return `Score: ${context.parsed.y}${diaryText ? ` — ${diaryText}` : ""}`;
+            }
+          }
+        }
+      }
+    };
   
   return (
     <div className="container py-5">
@@ -137,6 +151,12 @@ function App() {
               className="form-control"
               />
             </div>
+            <div className="col-md-6">
+              <textarea
+              value={diary}
+              onChange={e => setDiary(e.target.value)}
+              className="form-control"
+            /></div>
             <div className="col-md-2">
               <input
               type="number"
@@ -162,7 +182,7 @@ function App() {
       {loading && <p>Loading data...</p>}
 
       <div className="card shadow-sm p-3">
-        {data.length > 0 ? <Line data={chartData} /> : <p className="text-center">No data yet.</p>}
+        {data.length > 0 ? <Line data={chartData} options={chartOptions} /> : <p className="text-center">No data yet.</p>}
       </div>
         
 

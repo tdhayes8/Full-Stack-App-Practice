@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/api/happiness', async (req, res) => {
-    let { date, score } = req.body;
+    let { date, score, diary } = req.body;
 
     // Validate data
     if (!date || !score) {
@@ -35,11 +35,11 @@ app.post('/api/happiness', async (req, res) => {
 
     try {
         const result = await pool.query(
-            `INSERT INTO happiness (date, score) 
-            VALUES ($1, $2) ON CONFLICT (date)
-            DO UPDATE SET score = EXCLUDED.score
+            `INSERT INTO happiness (date, score, diary) 
+            VALUES ($1, $2, $3) ON CONFLICT (date)
+            DO UPDATE SET score = EXCLUDED.score, diary = EXCLUDED.diary
             RETURNING *`,
-            [date, score]
+            [date, score, diary]
         );
         res.json(result.rows[0]);
     } catch (err) {
