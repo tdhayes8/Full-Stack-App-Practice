@@ -155,6 +155,7 @@ function App() {
               <textarea
               value={diary}
               onChange={e => setDiary(e.target.value)}
+              placeholder="How was your day? (optional)"
               className="form-control"
             /></div>
             <div className="col-md-2">
@@ -198,6 +199,11 @@ function App() {
             </span>{" "}
             (Score: {bestDay.score})
           </h6>
+          {bestDay.diary && (
+            <p className="text-muted mb-0">
+              "{bestDay.diary}"
+            </p>
+          )}
         </div>
       )}
     </div>
