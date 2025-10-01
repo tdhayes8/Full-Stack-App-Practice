@@ -70,8 +70,10 @@ function App() {
   };
 
   // Prepare chart data
+  const labels = data.map(d => new Date(d.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }));
   const chartData = {
-    labels: data.map(d => d.date),
+    
+    labels: labels,
     datasets: [
       {
         label: "Happiness Score",
@@ -87,11 +89,20 @@ function App() {
     ? data.reduce((a, b) => (a.score > b.score ? a : b))
     : null;
 
+  
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-2">Happiness Tracker</h1>
+    <div className="container py-5">
+      {/* <h1 className="text-xl font-bold mb-2">Happiness Tracker</h1> */}
+      <header className="bg-primary text-white shadow-sm mb-4">
+        <div className="container py-4 text-center">
+        <h1 className="fw-bold display-5">😊 Happiness Tracker</h1>
+        <p className="lead mb-0">
+        Log your mood, track your progress, and celebrate your best days ✨
+    </p>
+  </div>
+</header>
 
-      <div className="mb-2">
+      {/* <div className="mb-2">
         <input
           type="date"
           value={date}
@@ -112,18 +123,63 @@ function App() {
         >
           Save
         </button>
-      </div>
+      </div> */}
+
+      <div className="card shadow-sm mb-4">
+        <div className="card-body">
+          <h5 className="card-title mb-3">Log Today’s Mood</h5>
+          <div className="row g-2">
+            <div className="col-md-3">
+              <input
+              type="date"
+              value={date}
+              onChange={e => setDate(e.target.value)}
+              className="form-control"
+              />
+            </div>
+            <div className="col-md-2">
+              <input
+              type="number"
+              min="1"
+              max="10"
+              value={score}
+              onChange={e => setScore(Number(e.target.value))}
+              className="form-control"
+            /></div>
+            <div className="col-md-2 d-grid">
+              <button
+              onClick={submit}
+              className="btn btn-primary"
+              >
+              Save
+            </button>
+            </div>
+          </div>
+        </div>
+        </div>
 
       {error && <p className="text-red-500 mb-2">{error}</p>}
       {loading && <p>Loading data...</p>}
 
-      {data.length > 0 ? (
-        <Line data={chartData} style={{ height: '300px' }} />
-      ) : (
-        !loading && <p>No data to display yet.</p>
-      )}
+      <div className="card shadow-sm p-3">
+        {data.length > 0 ? <Line data={chartData} /> : <p className="text-center">No data yet.</p>}
+      </div>
+        
 
-      {bestDay && <p className="mt-2">Best Day: {bestDay.date} (Score {bestDay.score})</p>}
+      {bestDay && (
+        <div className="mt-3">
+          <h6 className="fst-italic">
+            Best Day:{" "}
+            <span className="fw-bold">
+              {new Date(bestDay.date).toLocaleDateString(undefined, {
+                month: "short",
+                day: "numeric",
+              })}
+            </span>{" "}
+            (Score: {bestDay.score})
+          </h6>
+        </div>
+      )}
     </div>
   );
 }
